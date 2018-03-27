@@ -7,6 +7,8 @@ use PHPUnit\Framework\TestCase;
 
 class CsrfShieldTest extends TestCase
 {
+    const NAME = 'csrf_shield_token';
+
     public function setUp()
     {
         // ...
@@ -111,12 +113,9 @@ class CsrfShieldTest extends TestCase
         $token = CsrfShield::getInstance()->generate()->getToken();
         $htmlInput = CsrfShield::getInstance()->getHtmlInput();
         session_destroy();
-
-        $this->assertEquals($htmlInput, '<input
-            type="hidden"
-            name="csrf_shield_token"
-            id="csrf_shield_token"
-            value="' . $token . '" />'
+        
+        $this->assertEquals($htmlInput,
+            '<input type="hidden" name="_' . self::NAME . '" id="_' . self::NAME . '" value="' . $token . '" />'
         );
     }
 }

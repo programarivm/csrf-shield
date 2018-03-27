@@ -56,10 +56,6 @@ final class CsrfShield
             throw new SessionException("The session does not contain a '" . self::NAME . "' value.");
         }
 
-        return '<input
-            type="hidden"
-            name="csrf_shield_token"
-            id="csrf_shield_token"
-            value="' . $_SESSION[self::NAME] . '" />';
+        return '<input type="hidden" name="_' . self::NAME . '" id="_' . self::NAME . '" value="' . $_SESSION[self::NAME] . '" />';
     }
 }
