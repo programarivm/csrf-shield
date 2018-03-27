@@ -2,6 +2,7 @@
 namespace CsrfShield;
 
 use CsrfShield\Singleton;
+use CsrfShield\Exception\SessionException;
 
 /**
  * Main class.
@@ -12,21 +13,19 @@ use CsrfShield\Singleton;
  */
 class CsrfShield extends Singleton
 {
-    private $token;
-
     public function init() {
-        $this->token = sha1(uniqid(mt_rand()));
-
-        if (empty(session_id())) {
-            session_start();
-        }
-
-        $_SESSION['csrf_shield'] = $this->token;
+        $_SESSION['csrf_shield_token'] = sha1(uniqid(mt_rand()));
 
         return $this;
     }
 
     public function getToken() {
-        return $this->token;
+        if (empty($_SESSION['csrf_shield_token'])) {
+            throw new SessionException(
+                "The session does not contain a 'csrf_shield_token'."
+            );
+        }
+
+        return $_SESSION['csrf_shield_token'];
     }
 }

@@ -2,13 +2,16 @@
 namespace CsrfShield\Tests\Unit;
 
 use CsrfShield\CsrfShield;
+use CsrfShield\Exception\SessionException;
 use PHPUnit\Framework\TestCase;
 
 class CsrfShieldTest extends TestCase
 {
     public function setUp()
     {
-        // ...;
+        session_start();
+        $_SESSION = [];
+        session_destroy();
     }
 
     /**
@@ -26,9 +29,9 @@ class CsrfShieldTest extends TestCase
      */
     public function get_empty_token()
     {
-        $token = CsrfShield::getInstance()->getToken();
+        $this->expectException(SessionException::class);
 
-        $this->assertNull($token);
+        $token = CsrfShield::getInstance()->getToken();
     }
 
     /**
@@ -44,9 +47,14 @@ class CsrfShieldTest extends TestCase
         $this->assertEquals(40, strlen($token));
     }
 
+    /**
+     * @test
+     */
     public function get_token_by_chaining_methods()
     {
         $token = CsrfShield::getInstance()->init()->getToken();
+
+        // print_r($_SESSION); exit;
 
         $this->assertTrue(is_string($token));
         $this->assertEquals(40, strlen($token));
