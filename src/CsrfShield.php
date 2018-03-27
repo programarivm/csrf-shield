@@ -12,7 +12,7 @@ use CsrfShield\Exception\SessionException;
  */
 final class CsrfShield
 {
-    const NAME = 'csrf_shield_token';
+    const NAME = '_csrf_shield_token';
 
     protected static $instance;
 
@@ -40,7 +40,7 @@ final class CsrfShield
             throw new SessionException("The session does not contain a '" . self::NAME . "' value.");
         }
 
-        return $_SESSION['csrf_shield_token'];
+        return $_SESSION[self::NAME];
     }
 
     public function validate($token) {
@@ -48,7 +48,7 @@ final class CsrfShield
             throw new SessionException("The session does not contain a '" . self::NAME . "' value.");
         }
 
-        return $token === $_SESSION['csrf_shield_token'];
+        return $token === $_SESSION[self::NAME];
     }
 
     public function getHtmlInput() {
@@ -56,6 +56,6 @@ final class CsrfShield
             throw new SessionException("The session does not contain a '" . self::NAME . "' value.");
         }
 
-        return '<input type="hidden" name="_' . self::NAME . '" id="_' . self::NAME . '" value="' . $_SESSION[self::NAME] . '" />';
+        return '<input type="hidden" name="' . self::NAME . '" id="' . self::NAME . '" value="' . $_SESSION[self::NAME] . '" />';
     }
 }

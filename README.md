@@ -74,7 +74,13 @@ Here is an example:
 
     <input type="hidden" name="_csrf_shield_token" id="_csrf_shield_token" value="5b18469018952acd17039f62f310426ceac16d3f" />
 
-### 3. Hello World
+### 4. Hello World
+
+Run PHP's built-in server:
 
     cd examples
     php -S localhost:8000
+
+And then visit:
+
+    http://localhost:8000/hello-world.php
