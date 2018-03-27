@@ -13,41 +13,43 @@ use CsrfShield\Exception\SessionException;
  */
 class CsrfShield extends Singleton
 {
+    const NAME = 'csrf_shield_token';
+
     public function init() {
         if (empty(session_id())) {
             throw new SessionException("The session is not been started.");
         }
 
-        $_SESSION['csrf_shield_token'] = sha1(uniqid(mt_rand()));
+        $_SESSION[self::NAME] = sha1(uniqid(mt_rand()));
 
         return $this;
     }
 
     public function getToken() {
-        if (empty($_SESSION['csrf_shield_token'])) {
-            throw new SessionException("The session does not contain a 'csrf_shield_token'.");
+        if (empty($_SESSION[self::NAME])) {
+            throw new SessionException("The session does not contain a '" . self::NAME . "' value.");
         }
 
         return $_SESSION['csrf_shield_token'];
     }
 
     public function validate($token) {
-        if (empty($_SESSION['csrf_shield_token'])) {
-            throw new SessionException("The session does not contain a 'csrf_shield_token'.");
+        if (empty($_SESSION[self::NAME])) {
+            throw new SessionException("The session does not contain a '" . self::NAME . "' value.");
         }
 
         return $token === $_SESSION['csrf_shield_token'];
     }
 
     public function getHtmlInput() {
-        if (empty($_SESSION['csrf_shield_token'])) {
-            throw new SessionException("The session does not contain a 'csrf_shield_token'.");
+        if (empty($_SESSION[self::NAME])) {
+            throw new SessionException("The session does not contain a '" . self::NAME . "' value.");
         }
 
         return '<input
             type="hidden"
             name="csrf_shield_token"
             id="csrf_shield_token"
-            value="' . $_SESSION['csrf_shield_token'] . '" />';
+            value="' . $_SESSION[self::NAME] . '" />';
     }
 }
