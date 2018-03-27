@@ -1,7 +1,6 @@
 <?php
 namespace CsrfShield;
 
-use CsrfShield\Singleton;
 use CsrfShield\Exception\SessionException;
 
 /**
@@ -11,15 +10,26 @@ use CsrfShield\Exception\SessionException;
  * @link https://programarivm.com
  * @license GPL
  */
-class CsrfShield extends Singleton
+final class CsrfShield
 {
     const NAME = 'csrf_shield_token';
 
-    public function init() {
+    protected static $instance;
+
+    public static function getInstance()
+    {
         if (empty(session_id())) {
             throw new SessionException("The session is not been started.");
         }
 
+        if (null === static::$instance) {
+            static::$instance = new static();
+        }
+
+        return static::$instance;
+    }
+
+    public function init() {
         $_SESSION[self::NAME] = sha1(uniqid(mt_rand()));
 
         return $this;

@@ -22,9 +22,21 @@ class CsrfShieldTest extends TestCase
      */
     public function get_instance()
     {
+        session_start();
         $csrfShield = CsrfShield::getInstance();
+        session_destroy();
 
         $this->assertInstanceOf(CsrfShield::class, $csrfShield);
+    }
+
+    /**
+     * @test
+     */
+    public function get_instance_without_session_started_already()
+    {
+        $this->expectException(SessionException::class);
+
+        $csrfShield = CsrfShield::getInstance();
     }
 
     /**
