@@ -4,7 +4,7 @@ namespace CsrfShield;
 use CsrfShield\Exception\SessionException;
 
 /**
- * Main class.
+ * CsrfShield class.
  *
  * @author Jordi Bassagañas <info@programarivm.com>
  * @link https://programarivm.com
