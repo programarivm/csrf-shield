@@ -9,9 +9,12 @@ class CsrfShieldTest extends TestCase
 {
     public function setUp()
     {
-        session_start();
-        $_SESSION = [];
-        session_destroy();
+        // ...
+    }
+
+    public function tearDown()
+    {
+        // ...
     }
 
     /**
@@ -27,36 +30,50 @@ class CsrfShieldTest extends TestCase
     /**
      * @test
      */
-    public function get_empty_token()
+    public function get_token()
+    {
+        session_start();
+        $token = CsrfShield::getInstance()->init()->getToken();
+        session_destroy();
+
+        $this->assertTrue(is_string($token));
+        $this->assertEquals(40, strlen($token));
+    }
+
+    /**
+     * @test
+     */
+    public function get_token_without_chaining_methods()
+    {
+        session_start();
+        CsrfShield::getInstance()->init();
+        $token = CsrfShield::getInstance()->getToken();
+        session_destroy();
+
+        $this->assertTrue(is_string($token));
+        $this->assertEquals(40, strlen($token));
+    }
+
+    /**
+     * @test
+     */
+    public function get_token_without_session_started_already()
     {
         $this->expectException(SessionException::class);
 
-        $token = CsrfShield::getInstance()->getToken();
+        CsrfShield::getInstance()->init()->getToken();
     }
 
     /**
      * @test
      */
-    public function get_token_by_initializing_first()
+    public function is_invalid()
     {
-        CsrfShield::getInstance()->init();
+        session_start();
+        $token = 'foo';
+        $isValid = CsrfShield::getInstance()->init()->isValid($token);
+        session_destroy();
 
-        $token = CsrfShield::getInstance()->getToken();
-
-        $this->assertTrue(is_string($token));
-        $this->assertEquals(40, strlen($token));
-    }
-
-    /**
-     * @test
-     */
-    public function get_token_by_chaining_methods()
-    {
-        $token = CsrfShield::getInstance()->init()->getToken();
-
-        // print_r($_SESSION); exit;
-
-        $this->assertTrue(is_string($token));
-        $this->assertEquals(40, strlen($token));
+        $this->assertFalse($isValid);
     }
 }
