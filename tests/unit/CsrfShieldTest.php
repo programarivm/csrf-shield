@@ -45,7 +45,7 @@ class CsrfShieldTest extends TestCase
     public function get_token()
     {
         session_start();
-        $token = CsrfShield::getInstance()->init()->getToken();
+        $token = CsrfShield::getInstance()->generate()->getToken();
         session_destroy();
 
         $this->assertTrue(is_string($token));
@@ -58,7 +58,7 @@ class CsrfShieldTest extends TestCase
     public function get_token_without_chaining_methods()
     {
         session_start();
-        CsrfShield::getInstance()->init();
+        CsrfShield::getInstance()->generate();
         $token = CsrfShield::getInstance()->getToken();
         session_destroy();
 
@@ -73,7 +73,7 @@ class CsrfShieldTest extends TestCase
     {
         $this->expectException(SessionException::class);
 
-        CsrfShield::getInstance()->init()->getToken();
+        CsrfShield::getInstance()->generate()->getToken();
     }
 
     /**
@@ -82,7 +82,7 @@ class CsrfShieldTest extends TestCase
     public function is_valid()
     {
         session_start();
-        $token = CsrfShield::getInstance()->init()->getToken();
+        $token = CsrfShield::getInstance()->generate()->getToken();
         $isValid = CsrfShield::getInstance()->validate($token);
         session_destroy();
 
@@ -96,7 +96,7 @@ class CsrfShieldTest extends TestCase
     {
         session_start();
         $token = 'foo';
-        $isValid = CsrfShield::getInstance()->init()->validate($token);
+        $isValid = CsrfShield::getInstance()->generate()->validate($token);
         session_destroy();
 
         $this->assertFalse($isValid);
@@ -108,7 +108,7 @@ class CsrfShieldTest extends TestCase
     public function get_html_input()
     {
         session_start();
-        $token = CsrfShield::getInstance()->init()->getToken();
+        $token = CsrfShield::getInstance()->generate()->getToken();
         $htmlInput = CsrfShield::getInstance()->getHtmlInput();
         session_destroy();
 

@@ -29,7 +29,7 @@ final class CsrfShield
         return static::$instance;
     }
 
-    public function init() {
+    public function generate() {
         $_SESSION[self::NAME] = sha1(uniqid(mt_rand()));
 
         return $this;
