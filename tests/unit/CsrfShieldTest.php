@@ -67,13 +67,44 @@ class CsrfShieldTest extends TestCase
     /**
      * @test
      */
+    public function is_valid()
+    {
+        session_start();
+        $token = CsrfShield::getInstance()->init()->getToken();
+        $isValid = CsrfShield::getInstance()->validate($token);
+        session_destroy();
+
+        $this->assertTrue($isValid);
+    }
+
+    /**
+     * @test
+     */
     public function is_invalid()
     {
         session_start();
         $token = 'foo';
-        $isValid = CsrfShield::getInstance()->init()->isValid($token);
+        $isValid = CsrfShield::getInstance()->init()->validate($token);
         session_destroy();
 
         $this->assertFalse($isValid);
+    }
+
+    /**
+     * @test
+     */
+    public function get_html_input()
+    {
+        session_start();
+        $token = CsrfShield::getInstance()->init()->getToken();
+        $htmlInput = CsrfShield::getInstance()->getHtmlInput();
+        session_destroy();
+
+        $this->assertEquals($htmlInput, '<input
+            type="hidden"
+            name="csrf_shield_token"
+            id="csrf_shield_token"
+            value="' . $token . '" />'
+        );
     }
 }

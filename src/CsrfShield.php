@@ -31,11 +31,23 @@ class CsrfShield extends Singleton
         return $_SESSION['csrf_shield_token'];
     }
 
-    public function isValid($token) {
+    public function validate($token) {
         if (empty($_SESSION['csrf_shield_token'])) {
             throw new SessionException("The session does not contain a 'csrf_shield_token'.");
         }
 
         return $token === $_SESSION['csrf_shield_token'];
+    }
+
+    public function getHtmlInput() {
+        if (empty($_SESSION['csrf_shield_token'])) {
+            throw new SessionException("The session does not contain a 'csrf_shield_token'.");
+        }
+
+        return '<input
+            type="hidden"
+            name="csrf_shield_token"
+            id="csrf_shield_token"
+            value="' . $_SESSION['csrf_shield_token'] . '" />';
     }
 }
