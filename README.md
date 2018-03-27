@@ -84,3 +84,18 @@ Run PHP's built-in server:
 And then visit:
 
     http://localhost:8000/hello-world.php
+
+### 4. License
+
+The GNU General Public License.
+
+### 5. Contributions
+
+Would you help make this library better? Contributions are welcome.
+
+- Feel free to send a pull request
+- Drop an email at info@programarivm.com with the subject "CSRF Shield Contributions"
+- Leave me a comment on [Twitter](https://twitter.com/programarivm)
+- Say hello on [Google+](https://plus.google.com/+Programarivm)
+
+Many thanks.
