@@ -57,7 +57,7 @@ class CsrfShieldTest extends TestCase
     /**
      * @test
      */
-    public function get_token_without_chaining_methods()
+    public function get_token_no_chaining_methods()
     {
         session_start();
         CsrfShield::getInstance()->generate();
@@ -76,6 +76,29 @@ class CsrfShieldTest extends TestCase
         $this->expectException(SessionException::class);
 
         CsrfShield::getInstance()->generate()->getToken();
+    }
+
+    /**
+     * @test
+     */
+    public function get_token_without_csrf_token_in_session()
+    {
+        $caught = false;
+
+        session_start();
+
+        try {
+            CsrfShield::getInstance()->getToken();
+        } catch (SessionException $e) {
+            $caught = true;
+            $this->assertTrue(true);
+        } finally {
+            session_destroy();
+        }
+
+        if (!$caught) {
+            $this->assertTrue(false);
+        }
     }
 
     /**
@@ -107,15 +130,61 @@ class CsrfShieldTest extends TestCase
     /**
      * @test
      */
+    public function validate_without_csrf_token_in_session()
+    {
+        $caught = false;
+
+        session_start();
+
+        try {
+            $isValid = CsrfShield::getInstance()->validate('foo');
+        } catch (SessionException $e) {
+            $caught = true;
+            $this->assertTrue(true);
+        } finally {
+            session_destroy();
+        }
+
+        if (!$caught) {
+            $this->assertTrue(false);
+        }
+    }
+
+    /**
+     * @test
+     */
     public function get_html_input()
     {
         session_start();
         $token = CsrfShield::getInstance()->generate()->getToken();
         $htmlInput = CsrfShield::getInstance()->getHtmlInput();
         session_destroy();
-        
+
         $this->assertEquals($htmlInput,
             '<input type="hidden" name="_' . self::NAME . '" id="_' . self::NAME . '" value="' . $token . '" />'
         );
+    }
+
+    /**
+     * @test
+     */
+    public function get_html_input_without_csrf_token_in_session()
+    {
+        $caught = false;
+
+        session_start();
+
+        try {
+            $htmlInput = CsrfShield::getInstance()->getHtmlInput();
+        } catch (SessionException $e) {
+            $caught = true;
+            $this->assertTrue(true);
+        } finally {
+            session_destroy();
+        }
+
+        if (!$caught) {
+            $this->assertTrue(false);
+        }
     }
 }
