@@ -22,10 +22,10 @@ class CsrfShieldTest extends TestCase
     /**
      * @test
      */
-    public function get_instance()
+    public function instantiate()
     {
         session_start();
-        $csrfShield = CsrfShield::getInstance();
+        $csrfShield = new CsrfShield;
         session_destroy();
 
         $this->assertInstanceOf(CsrfShield::class, $csrfShield);
@@ -34,11 +34,11 @@ class CsrfShieldTest extends TestCase
     /**
      * @test
      */
-    public function get_instance_without_session_started_already()
+    public function instantiate_without_session_started_already()
     {
         $this->expectException(SessionException::class);
 
-        $csrfShield = CsrfShield::getInstance();
+        $csrfShield = new CsrfShield;
     }
 
     /**
@@ -47,7 +47,7 @@ class CsrfShieldTest extends TestCase
     public function get_token()
     {
         session_start();
-        $token = CsrfShield::getInstance()->generate()->getToken();
+        $token = (new CsrfShield)->generate()->getToken();
         session_destroy();
 
         $this->assertTrue(is_string($token));
@@ -60,8 +60,8 @@ class CsrfShieldTest extends TestCase
     public function get_token_no_chaining_methods()
     {
         session_start();
-        CsrfShield::getInstance()->generate();
-        $token = CsrfShield::getInstance()->getToken();
+        $csrfShield = (new CsrfShield)->generate();
+        $token = $csrfShield->getToken();
         session_destroy();
 
         $this->assertTrue(is_string($token));
@@ -75,7 +75,7 @@ class CsrfShieldTest extends TestCase
     {
         $this->expectException(SessionException::class);
 
-        CsrfShield::getInstance()->generate()->getToken();
+        $token = (new CsrfShield)->generate()->getToken();
     }
 
     /**
@@ -88,7 +88,7 @@ class CsrfShieldTest extends TestCase
         session_start();
 
         try {
-            CsrfShield::getInstance()->getToken();
+            $token = (new CsrfShield)->getToken();
         } catch (SessionException $e) {
             $caught = true;
             $this->assertTrue(true);
@@ -107,8 +107,9 @@ class CsrfShieldTest extends TestCase
     public function is_valid()
     {
         session_start();
-        $token = CsrfShield::getInstance()->generate()->getToken();
-        $isValid = CsrfShield::getInstance()->validate($token);
+        $csrfShield = (new CsrfShield)->generate();
+        $token = $csrfShield->getToken();
+        $isValid = $csrfShield->validate($token);
         session_destroy();
 
         $this->assertTrue($isValid);
@@ -120,8 +121,9 @@ class CsrfShieldTest extends TestCase
     public function is_invalid()
     {
         session_start();
+        $csrfShield = (new CsrfShield)->generate();
         $token = 'foo';
-        $isValid = CsrfShield::getInstance()->generate()->validate($token);
+        $isValid = $csrfShield->validate($token);
         session_destroy();
 
         $this->assertFalse($isValid);
@@ -137,7 +139,7 @@ class CsrfShieldTest extends TestCase
         session_start();
 
         try {
-            $isValid = CsrfShield::getInstance()->validate('foo');
+            $isValid = (new CsrfShield)->validate('foo');
         } catch (SessionException $e) {
             $caught = true;
             $this->assertTrue(true);
@@ -156,8 +158,9 @@ class CsrfShieldTest extends TestCase
     public function get_html_input()
     {
         session_start();
-        $token = CsrfShield::getInstance()->generate()->getToken();
-        $htmlInput = CsrfShield::getInstance()->getHtmlInput();
+        $csrfShield = (new CsrfShield)->generate();
+        $token = $csrfShield->getToken();
+        $htmlInput = $csrfShield->getHtmlInput();
         session_destroy();
 
         $this->assertEquals($htmlInput,
@@ -175,7 +178,7 @@ class CsrfShieldTest extends TestCase
         session_start();
 
         try {
-            $htmlInput = CsrfShield::getInstance()->getHtmlInput();
+            $htmlInput = (new CsrfShield)->getHtmlInput();
         } catch (SessionException $e) {
             $caught = true;
             $this->assertTrue(true);

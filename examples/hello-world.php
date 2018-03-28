@@ -5,22 +5,21 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 session_start();
 
+$csrfShield = new CsrfShield;
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-    $isValid = CsrfShield::getInstance()->validate($_POST[CsrfShield::NAME]);
-
-    if ($isValid) {
+    if ($csrfShield->validate($_POST['_csrf_shield_token'])) {
         echo 'The token is valid';
     } else {
         echo 'Whoops! The token is not valid';
-
     }
 
 }
 
 elseif ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
-    CsrfShield::getInstance()->generate(); ?>
+    $csrfShield->generate(); ?>
 
     <!doctype html>
     <html lang="en">
@@ -44,7 +43,7 @@ elseif ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     <label for="msg">Message:</label>
                     <textarea id="msg" name="user_message"></textarea>
                 </div>
-                <?php echo CsrfShield::getInstance()->getHtmlInput(); ?>
+                <?php echo $csrfShield->getHtmlInput(); ?>
                 <div>
                     <input type="submit" value="Submit">
                 </div>

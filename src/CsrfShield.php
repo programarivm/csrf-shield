@@ -14,19 +14,11 @@ final class CsrfShield
 {
     const NAME = '_csrf_shield_token';
 
-    protected static $instance;
-
-    public static function getInstance()
+    public function __construct()
     {
         if (empty(session_id())) {
             throw new SessionException("The session is not been started.");
         }
-
-        if (null === static::$instance) {
-            static::$instance = new static();
-        }
-
-        return static::$instance;
     }
 
     public function generate() {

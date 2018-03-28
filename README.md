@@ -20,12 +20,9 @@ use CsrfShield\CsrfShield;
 
 session_start();
 // ...
-$token = CsrfShield::getInstance()->generate()->getToken();
+$csrfShield = new CsrfShield;
 ```
-All action takes place through the `CsrfShield::getInstance()` object. The call to the `generate()` method creates a new CSRF token storing it into the PHP session on the server side.
-
-> **Side note**. The name of the CSRF session variable is `csrf_shield_token` by default.
-
+All action takes place through the `$csrfShield` object.
 
 ### 3. CSRF Shield Methods
 
@@ -34,24 +31,26 @@ All action takes place through the `CsrfShield::getInstance()` object. The call 
 Creates and stores a new CSRF token into the PHP session.
 
 ```php
-$csrfShield = CsrfShield::getInstance()->generate();
+$csrfShield = (new CsrfShield)->generate();
 ```
+
+> **Side note**. The name of the CSRF session variable is `_csrf_shield_token` by default.
 
 #### 3.2. `getToken()`
 
 Gets the CSRF token stored into the session.
 
-The following will create and get a new token -- all at the same time:
+The following will create and get a new token -- both steps at the same time:
 
 ```php
-$token = CsrfShield::getInstance()->generate()->getToken();
+$token = (new CsrfShield)->generate()->getToken();
 ```
 
 On the other hand, this will get an existing token only:
 
 
 ```php
-$token = CsrfShield::getInstance()->getToken();
+$token = $csrfShield->getToken();
 ```
 
 #### 3.3. `validate()`
@@ -59,7 +58,7 @@ $token = CsrfShield::getInstance()->getToken();
 Compares the given string against the current CSRF token.
 
 ```php
-$isValid = CsrfShield::getInstance()->validate($token);
+$isValid = $csrfShield->validate($token);
 ```
 
 #### 3.4. `getHtmlInput()`
@@ -67,7 +66,7 @@ $isValid = CsrfShield::getInstance()->validate($token);
 Gets the html input according to the current CSRF token.
 
 ```php
-$htmlInput = CsrfShield::getInstance()->getHtmlInput();
+$htmlInput = $csrfShield->getHtmlInput();
 ```
 
 Here is an example:
@@ -85,11 +84,11 @@ And then visit:
 
     http://localhost:8000/hello-world.php
 
-### 4. License
+### 5. License
 
 The GNU General Public License.
 
-### 5. Contributions
+### 6. Contributions
 
 Would you help make this library better? Contributions are welcome.
 
