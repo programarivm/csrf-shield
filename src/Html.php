@@ -36,7 +36,7 @@ class Html
     }
 
     /**
-     * Renders an HTML input tag.
+     * Returns an HTML input tag with the value of the current CSRF token embedded.
      */
     public function input()
     {

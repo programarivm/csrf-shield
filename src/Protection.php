@@ -50,7 +50,15 @@ class Protection
     }
 
     /**
-     * Renders an HTML input tag.
+     * Gets the current CSRF token from the session.
+     */
+    public function getToken()
+    {
+        $this->csrfSession->getToken();
+    }
+
+    /**
+     * Returns an HTML input tag with the value of the current CSRF token embedded.
      */
     public function htmlInput()
     {
@@ -58,7 +66,8 @@ class Protection
     }
 
     /**
-     * Validates the incoming CSRF token against the session.
+     * Validates the incoming CSRF token against the session's token, assuming
+     * the token is sent through the $_POST['_csrf_shield_token'] value.
      */
     public function validateToken()
     {
