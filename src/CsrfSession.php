@@ -1,7 +1,7 @@
 <?php
 namespace CsrfShield;
 
-use CsrfShield\Exception\SessionException;
+use CsrfShield\Exception\CsrfSessionException;
 
 /**
  * Session class.
@@ -17,7 +17,7 @@ class CsrfSession
     public function __construct()
     {
         if (empty(session_id())) {
-            throw new SessionException("The session is not been started.");
+            throw new CsrfSessionException("The session is not been started.");
         }
     }
 
@@ -29,7 +29,7 @@ class CsrfSession
 
     public function getToken() {
         if (empty($_SESSION[self::NAME])) {
-            throw new SessionException("The session does not contain a '" . self::NAME . "' value.");
+            throw new CsrfSessionException("The session does not contain a '" . self::NAME . "' value.");
         }
 
         return $_SESSION[self::NAME];
@@ -37,7 +37,7 @@ class CsrfSession
 
     public function validate($token) {
         if (empty($_SESSION[self::NAME])) {
-            throw new SessionException("The session does not contain a '" . self::NAME . "' value.");
+            throw new CsrfSessionException("The session does not contain a '" . self::NAME . "' value.");
         }
 
         return $token === $_SESSION[self::NAME];

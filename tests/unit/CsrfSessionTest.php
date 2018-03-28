@@ -2,7 +2,7 @@
 namespace CsrfShield\Tests\Unit;
 
 use CsrfShield\CsrfSession;
-use CsrfShield\Exception\SessionException;
+use CsrfShield\Exception\CsrfSessionException;
 use PHPUnit\Framework\TestCase;
 
 class CsrfSessionTest extends TestCase
@@ -24,7 +24,7 @@ class CsrfSessionTest extends TestCase
      */
     public function instantiate_without_session_started_already()
     {
-        $this->expectException(SessionException::class);
+        $this->expectException(CsrfSessionException::class);
 
         $csrfSession = new CsrfSession;
     }
@@ -61,7 +61,7 @@ class CsrfSessionTest extends TestCase
      */
     public function get_token_without_session_started_already()
     {
-        $this->expectException(SessionException::class);
+        $this->expectException(CsrfSessionException::class);
 
         $token = (new CsrfSession)->generate()->getToken();
     }
@@ -77,7 +77,7 @@ class CsrfSessionTest extends TestCase
 
         try {
             $token = (new CsrfSession)->getToken();
-        } catch (SessionException $e) {
+        } catch (CsrfSessionException $e) {
             $caught = true;
             $this->assertTrue(true);
         } finally {
@@ -128,7 +128,7 @@ class CsrfSessionTest extends TestCase
 
         try {
             $isValid = (new CsrfSession)->validate('foo');
-        } catch (SessionException $e) {
+        } catch (CsrfSessionException $e) {
             $caught = true;
             $this->assertTrue(true);
         } finally {

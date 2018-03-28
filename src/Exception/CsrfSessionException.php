@@ -10,7 +10,7 @@ use CsrfShield\Exception;
  * @link https://programarivm.com
  * @license GPL
  */
-final class SessionException extends \UnexpectedValueException implements Exception
+final class CsrfSessionException extends \UnexpectedValueException implements Exception
 {
 
 }
