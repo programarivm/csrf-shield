@@ -8,29 +8,36 @@ use CsrfShield\Exception\UnstartedSessionException;
 /**
  * Html class.
  *
+ * Renders html tags with the csrf token embedded.
+ *
  * @author Jordi Bassagañas <info@programarivm.com>
  * @link https://programarivm.com
  * @license GPL
  */
 class Html
 {
+    /**
+     * The CSRF session.
+     *
+     * @var CsrfSession
+     */
     private $csrfSession;
 
+    /**
+     * Constructor.
+     */
     public function __construct($csrfSession = null)
     {
         if (empty(session_id())) {
             throw new UnstartedSessionException();
         }
 
-        if (empty($csrfSession->getToken())) {
-            throw new EmptyCsrfTokenException();
-        }
-
         $this->csrfSession = $csrfSession;
     }
 
-
-
+    /**
+     * Renders an HTML input tag.
+     */
     public function input()
     {
         if (empty(session_id())) {

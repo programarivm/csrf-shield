@@ -2,11 +2,12 @@
 namespace CsrfShield\Tests\Integration;
 
 use CsrfShield\Protection;
+use GuzzleHttp\Client;
 use PHPUnit\Framework\TestCase;
 
 class ProtectionTest extends TestCase
 {
-    const BASE_URI = 'http://localhost:8000/';
+    const BASE_URI = 'http://localhost:8001/';
 
     const TIME_DELAY = 2;
 
@@ -28,7 +29,7 @@ class ProtectionTest extends TestCase
     {
         sleep(self::TIME_DELAY);
 
-        $this->http = new \GuzzleHttp\Client([
+        $this->http = new Client([
             'base_uri' => self::BASE_URI,
             'cookies' => true,
             'exceptions' => false

@@ -9,36 +9,58 @@ use CsrfShield\Html;
 /**
  * Protection class.
  *
+ * This is the main class which basically acts as a wrapper of CsrfShield\CsrfSession
+ * and CsrfShield\Html.
+ *
  * @author Jordi Bassagañas <info@programarivm.com>
  * @link https://programarivm.com
  * @license GPL
  */
 class Protection
 {
+    /**
+     * The CSRF session.
+     *
+     * @var CsrfSession
+     */
     private $csrfSession;
 
+    /**
+     * HTML renderer.
+     *
+     * @var Html
+     */
     private $html;
 
+    /**
+     * Constructor.
+     */
     public function __construct()
     {
         $this->csrfSession = new CsrfSession;
-
         $this->html = new Html($this->csrfSession);
-
-        $this->protect();
     }
 
-    public function getCsrfSession()
+    /**
+     * Creates and stores a new CSRF token into the session.
+     */
+    public function startToken()
     {
-        return $this->csrfSession;
+        $this->csrfSession->startToken();
     }
 
-    public function getHtml()
+    /**
+     * Renders an HTML input tag.
+     */
+    public function htmlInput()
     {
-        return $this->html;
+        return $this->html->input();
     }
 
-    private function protect()
+    /**
+     * Validates the incoming CSRF token against the session.
+     */
+    public function validateToken()
     {
         switch($_SERVER['REQUEST_METHOD']) {
             case 'POST':
