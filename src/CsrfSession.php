@@ -4,13 +4,13 @@ namespace CsrfShield;
 use CsrfShield\Exception\SessionException;
 
 /**
- * CsrfShield class.
+ * Session class.
  *
  * @author Jordi Bassagañas <info@programarivm.com>
  * @link https://programarivm.com
  * @license GPL
  */
-final class CsrfShield
+class CsrfSession
 {
     const NAME = '_csrf_shield_token';
 
@@ -41,13 +41,5 @@ final class CsrfShield
         }
 
         return $token === $_SESSION[self::NAME];
-    }
-
-    public function getHtmlInput() {
-        if (empty($_SESSION[self::NAME])) {
-            throw new SessionException("The session does not contain a '" . self::NAME . "' value.");
-        }
-
-        return '<input type="hidden" name="' . self::NAME . '" id="' . self::NAME . '" value="' . $_SESSION[self::NAME] . '" />';
     }
 }
