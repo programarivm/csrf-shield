@@ -22,12 +22,20 @@ class CsrfSession
     }
 
     public function generate() {
+        if (empty(session_id())) {
+            throw new CsrfSessionException("The session is not been started.");
+        }
+
         $_SESSION[self::NAME] = sha1(uniqid(mt_rand()));
 
         return $this;
     }
 
     public function getToken() {
+        if (empty(session_id())) {
+            throw new CsrfSessionException("The session is not been started.");
+        }
+
         if (empty($_SESSION[self::NAME])) {
             throw new CsrfSessionException("The session does not contain a '" . self::NAME . "' value.");
         }
@@ -36,6 +44,10 @@ class CsrfSession
     }
 
     public function validate($token) {
+        if (empty(session_id())) {
+            throw new CsrfSessionException("The session is not been started.");
+        }
+        
         if (empty($_SESSION[self::NAME])) {
             throw new CsrfSessionException("The session does not contain a '" . self::NAME . "' value.");
         }
