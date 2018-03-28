@@ -1,6 +1,10 @@
 ## CSRF Shield
 
+[![Build Status](https://travis-ci.org/programarivm/csrf-shield.svg?branch=master)](https://travis-ci.org/programarivm/csrf-shield)
+[![Packagist](https://img.shields.io/packagist/dt/programarivm/csrf-shield.svg)](https://packagist.org/packages/programarivm/csrf-shield)
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+
+![CSRF Shield](/resources/csrf-shield.jpg?raw=true)
 
 This is a simple, framework-agnostic library that helps you protect your PHP web apps from CSRF attacks.
 
