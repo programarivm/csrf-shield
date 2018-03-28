@@ -7,7 +7,7 @@ use PHPUnit\Framework\TestCase;
 
 class ProtectionTest extends TestCase
 {
-    const BASE_URI = 'http://localhost:8001/';
+    const BASE_URI = 'http://localhost:8000/';
 
     const TIME_DELAY = 2;
 
