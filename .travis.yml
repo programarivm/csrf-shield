@@ -9,7 +9,4 @@ before_script:
   - composer install --no-interaction
 
 script:
-  - cd examples
-  - php -S localhost:8000
-  - cd ..
-  - vendor/bin/phpunit tests
+  - vendor/bin/phpunit tests/unit
