@@ -15,7 +15,7 @@ class HtmlTest extends TestCase
     public function input()
     {
         session_start();
-        $csrfSession = (new CsrfSession)->generate();
+        $csrfSession = (new CsrfSession)->startToken();
         $htmlInput = (new Html($csrfSession))->input();
         $token = $csrfSession->getToken();
         session_destroy();

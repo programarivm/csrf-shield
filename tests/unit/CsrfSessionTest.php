@@ -36,7 +36,7 @@ class CsrfSessionTest extends TestCase
     public function get_token()
     {
         session_start();
-        $token = (new CsrfSession)->generate()->getToken();
+        $token = (new CsrfSession)->startToken()->getToken();
         session_destroy();
 
         $this->assertTrue(is_string($token));
@@ -49,7 +49,7 @@ class CsrfSessionTest extends TestCase
     public function get_token_no_chaining_methods()
     {
         session_start();
-        $csrfSession = (new CsrfSession)->generate();
+        $csrfSession = (new CsrfSession)->startToken();
         $token = $csrfSession->getToken();
         session_destroy();
 
@@ -64,7 +64,7 @@ class CsrfSessionTest extends TestCase
     {
         $this->expectException(UnstartedSessionException::class);
 
-        $token = (new CsrfSession)->generate()->getToken();
+        $token = (new CsrfSession)->startToken()->getToken();
     }
 
     /**
@@ -96,9 +96,9 @@ class CsrfSessionTest extends TestCase
     public function is_valid()
     {
         session_start();
-        $csrfSession = (new CsrfSession)->generate();
+        $csrfSession = (new CsrfSession)->startToken();
         $token = $csrfSession->getToken();
-        $isValid = $csrfSession->validate($token);
+        $isValid = $csrfSession->validateToken($token);
         session_destroy();
 
         $this->assertTrue($isValid);
@@ -110,9 +110,9 @@ class CsrfSessionTest extends TestCase
     public function is_invalid()
     {
         session_start();
-        $csrfSession = (new CsrfSession)->generate();
+        $csrfSession = (new CsrfSession)->startToken();
         $token = 'foo';
-        $isValid = $csrfSession->validate($token);
+        $isValid = $csrfSession->validateToken($token);
         session_destroy();
 
         $this->assertFalse($isValid);
@@ -128,7 +128,7 @@ class CsrfSessionTest extends TestCase
         session_start();
 
         try {
-            $isValid = (new CsrfSession)->validate('foo');
+            $isValid = (new CsrfSession)->validateToken('foo');
         } catch (EmptyCsrfTokenException $e) {
             $caught = true;
             $this->assertTrue(true);

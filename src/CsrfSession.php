@@ -22,7 +22,7 @@ class CsrfSession
         }
     }
 
-    public function generate() {
+    public function startToken() {
         if (empty(session_id())) {
             throw new UnstartedSessionException();
         }
@@ -44,7 +44,7 @@ class CsrfSession
         return $_SESSION[self::NAME];
     }
 
-    public function validate($token) {
+    public function validateToken($token) {
         if (empty(session_id())) {
             throw new UnstartedSessionException();
         }
