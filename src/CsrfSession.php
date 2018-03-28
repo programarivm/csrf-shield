@@ -1,7 +1,8 @@
 <?php
 namespace CsrfShield;
 
-use CsrfShield\Exception\CsrfSessionException;
+use CsrfShield\Exception\EmptyCsrfTokenException;
+use CsrfShield\Exception\UnstartedSessionException;
 
 /**
  * Session class.
@@ -17,13 +18,13 @@ class CsrfSession
     public function __construct()
     {
         if (empty(session_id())) {
-            throw new CsrfSessionException("The session is not been started.");
+            throw new UnstartedSessionException();
         }
     }
 
     public function generate() {
         if (empty(session_id())) {
-            throw new CsrfSessionException("The session is not been started.");
+            throw new UnstartedSessionException();
         }
 
         $_SESSION[self::NAME] = sha1(uniqid(mt_rand()));
@@ -33,11 +34,11 @@ class CsrfSession
 
     public function getToken() {
         if (empty(session_id())) {
-            throw new CsrfSessionException("The session is not been started.");
+            throw new UnstartedSessionException();
         }
 
         if (empty($_SESSION[self::NAME])) {
-            throw new CsrfSessionException("The session does not contain a '" . self::NAME . "' value.");
+            throw new EmptyCsrfTokenException();
         }
 
         return $_SESSION[self::NAME];
@@ -45,11 +46,11 @@ class CsrfSession
 
     public function validate($token) {
         if (empty(session_id())) {
-            throw new CsrfSessionException("The session is not been started.");
+            throw new UnstartedSessionException();
         }
-        
+
         if (empty($_SESSION[self::NAME])) {
-            throw new CsrfSessionException("The session does not contain a '" . self::NAME . "' value.");
+            throw new EmptyCsrfTokenException();
         }
 
         return $token === $_SESSION[self::NAME];

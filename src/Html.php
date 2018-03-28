@@ -1,8 +1,9 @@
 <?php
 namespace CsrfShield;
 
-use CsrfShield\Exception\CsrfSessionException;
 use CsrfShield\CsrfSession;
+use CsrfShield\Exception\EmptyCsrfTokenException;
+use CsrfShield\Exception\UnstartedSessionException;
 
 /**
  * Html class.
@@ -18,11 +19,11 @@ class Html
     public function __construct($csrfSession = null)
     {
         if (empty(session_id())) {
-            throw new CsrfSessionException("The session is not been started.");
+            throw new UnstartedSessionException();
         }
 
         if (empty($csrfSession->getToken())) {
-            throw new CsrfSessionException("The session does not contain a '" . $csrfSession::NAME . "' value.");
+            throw new EmptyCsrfTokenException();
         }
 
         $this->csrfSession = $csrfSession;
@@ -33,11 +34,11 @@ class Html
     public function input()
     {
         if (empty(session_id())) {
-            throw new CsrfSessionException("The session is not been started.");
+            throw new UnstartedSessionException();
         }
 
         if (empty($this->csrfSession->getToken())) {
-            throw new CsrfSessionException("The session does not contain a '" . $this->csrfSession::NAME . "' value.");
+            throw new EmptyCsrfTokenException();
         }
 
         return '<input type="hidden" name="' . $this->csrfSession::NAME . '" id="' . $this->csrfSession::NAME . '" value="' . $_SESSION[$this->csrfSession::NAME] . '" />';

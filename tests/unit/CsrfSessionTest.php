@@ -2,7 +2,8 @@
 namespace CsrfShield\Tests\Unit;
 
 use CsrfShield\CsrfSession;
-use CsrfShield\Exception\CsrfSessionException;
+use CsrfShield\Exception\EmptyCsrfTokenException;
+use CsrfShield\Exception\UnstartedSessionException;
 use PHPUnit\Framework\TestCase;
 
 class CsrfSessionTest extends TestCase
@@ -22,9 +23,9 @@ class CsrfSessionTest extends TestCase
     /**
      * @test
      */
-    public function instantiate_without_session_started_already()
+    public function instantiate_without_session_started()
     {
-        $this->expectException(CsrfSessionException::class);
+        $this->expectException(UnstartedSessionException::class);
 
         $csrfSession = new CsrfSession;
     }
@@ -59,9 +60,9 @@ class CsrfSessionTest extends TestCase
     /**
      * @test
      */
-    public function get_token_without_session_started_already()
+    public function get_token_without_session_started()
     {
-        $this->expectException(CsrfSessionException::class);
+        $this->expectException(UnstartedSessionException::class);
 
         $token = (new CsrfSession)->generate()->getToken();
     }
@@ -77,7 +78,7 @@ class CsrfSessionTest extends TestCase
 
         try {
             $token = (new CsrfSession)->getToken();
-        } catch (CsrfSessionException $e) {
+        } catch (EmptyCsrfTokenException $e) {
             $caught = true;
             $this->assertTrue(true);
         } finally {
@@ -128,7 +129,7 @@ class CsrfSessionTest extends TestCase
 
         try {
             $isValid = (new CsrfSession)->validate('foo');
-        } catch (CsrfSessionException $e) {
+        } catch (EmptyCsrfTokenException $e) {
             $caught = true;
             $this->assertTrue(true);
         } finally {

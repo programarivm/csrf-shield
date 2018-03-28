@@ -2,7 +2,8 @@
 namespace CsrfShield\Tests\Unit;
 
 use CsrfShield\CsrfSession;
-use CsrfShield\Exception\CsrfSessionException;
+use CsrfShield\Exception\EmptyCsrfTokenException;
+use CsrfShield\Exception\UnstartedSessionException;
 use CsrfShield\Html;
 use PHPUnit\Framework\TestCase;
 
@@ -36,7 +37,7 @@ class HtmlTest extends TestCase
         try {
             $csrfSession = new CsrfSession;
             $htmlInput = (new Html($csrfSession))->input();
-        } catch (CsrfSessionException $e) {
+        } catch (EmptyCsrfTokenException $e) {
             $caught = true;
             $this->assertTrue(true);
         } finally {
