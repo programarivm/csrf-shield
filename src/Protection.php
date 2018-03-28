@@ -93,28 +93,28 @@ class Protection
     }
 
     /**
-     * Sends an HTTP forbidden response.
+     * Sends an HTTP Forbidden response.
      */
     private function forbidden()
     {
         http_response_code(403);
         header('Content-Type: application/json');
         echo json_encode([
-            'message' => 'Forbidden.']
-        );
+            'message' => 'Forbidden.'
+        ]);
         exit;
     }
 
     /**
-     * Sends an HTTP bad response.
+     * Sends an HTTP Method Not Allowed response.
      */
     private function methodNotAllowed()
     {
         http_response_code(405);
         header('Content-Type: application/json');
         echo json_encode([
-            'message' => 'Whoops! You are not authorized to access this resource.']
-        );
+            'message' => 'Method not allowed.'
+        ]);
         exit;
     }
 }
