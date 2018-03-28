@@ -2,8 +2,6 @@
 namespace CsrfShield;
 
 use CsrfShield\CsrfSession;
-use CsrfShield\Exception\EmptyCsrfTokenException;
-use CsrfShield\Exception\UnstartedSessionException;
 use CsrfShield\Html;
 
 /**
@@ -51,14 +49,18 @@ class Protection
 
     /**
      * Gets the current CSRF token from the session.
+     *
+     * @return string
      */
     public function getToken()
     {
-        $this->csrfSession->getToken();
+        return $this->csrfSession->getToken();
     }
 
     /**
      * Returns an HTML input tag with the value of the current CSRF token embedded.
+     *
+     * @return string
      */
     public function htmlInput()
     {
@@ -66,23 +68,53 @@ class Protection
     }
 
     /**
-     * Validates the incoming CSRF token against the session's token, assuming
-     * the token is sent through the $_POST['_csrf_shield_token'] value.
+     * Validates the incoming CSRF token against the session's token.
      */
     public function validateToken()
     {
-        switch($_SERVER['REQUEST_METHOD']) {
-            case 'POST':
-                if (!$this->csrfSession->validateToken($_POST[$this->csrfSession::NAME])) {
-                    http_response_code(403);
-                    header('Content-Type: application/json');
-                    echo json_encode([
-                        'message' => 'Whoops! You are not authorized to access this resource.']
-                    );
-                    exit;
-                }
+        switch (true) {
 
+            case $_SERVER['REQUEST_METHOD'] !== 'POST':
+                $this->methodNotAllowed();
+                break;
+
+            case !empty($_SERVER['HTTP_X_CSRF_TOKEN']):
+                if (!$this->csrfSession->validateToken($_SERVER['HTTP_X_CSRF_TOKEN'])) {
+                    $this->forbidden();
+                }
+                break;
+
+            case $_SERVER['REQUEST_METHOD'] === 'POST':
+                if (!$this->csrfSession->validateToken($_POST[$this->csrfSession::NAME])) {
+                    $this->forbidden();
+                }
                 break;
         }
+    }
+
+    /**
+     * Sends an HTTP forbidden response.
+     */
+    private function forbidden()
+    {
+        http_response_code(403);
+        header('Content-Type: application/json');
+        echo json_encode([
+            'message' => 'Forbidden.']
+        );
+        exit;
+    }
+
+    /**
+     * Sends an HTTP bad response.
+     */
+    private function methodNotAllowed()
+    {
+        http_response_code(405);
+        header('Content-Type: application/json');
+        echo json_encode([
+            'message' => 'Whoops! You are not authorized to access this resource.']
+        );
+        exit;
     }
 }
