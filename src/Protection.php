@@ -3,6 +3,7 @@ namespace CsrfShield;
 
 use CsrfShield\CsrfSession;
 use CsrfShield\Html;
+use CsrfShield\HttpResponse;
 
 /**
  * Protection class.
@@ -75,46 +76,20 @@ class Protection
         switch (true) {
 
             case $_SERVER['REQUEST_METHOD'] !== 'POST':
-                $this->methodNotAllowed();
+                HttpResponse::methodNotAllowed();
                 break;
 
             case !empty($_SERVER['HTTP_X_CSRF_TOKEN']):
                 if (!$this->csrfSession->validateToken($_SERVER['HTTP_X_CSRF_TOKEN'])) {
-                    $this->forbidden();
+                    HttpResponse::forbidden();
                 }
                 break;
 
             default:
                 if (!$this->csrfSession->validateToken($_POST[$this->csrfSession::NAME])) {
-                    $this->forbidden();
+                    HttpResponse::forbidden();
                 }
                 break;
         }
-    }
-
-    /**
-     * Sends an HTTP Forbidden response.
-     */
-    private function forbidden()
-    {
-        http_response_code(403);
-        header('Content-Type: application/json');
-        echo json_encode([
-            'message' => 'Forbidden.'
-        ]);
-        exit;
-    }
-
-    /**
-     * Sends an HTTP Method Not Allowed response.
-     */
-    private function methodNotAllowed()
-    {
-        http_response_code(405);
-        header('Content-Type: application/json');
-        echo json_encode([
-            'message' => 'Method not allowed.'
-        ]);
-        exit;
     }
 }
