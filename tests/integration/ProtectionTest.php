@@ -112,6 +112,10 @@ class ProtectionTest extends TestCase
         );
 
         $this->assertEquals(403, $this->response->getStatusCode());
+        $this->assertEquals(
+            '{"message":"Forbidden."}',
+            $this->response->getBody()->getContents()
+        );
     }
 
     /**
@@ -180,6 +184,10 @@ class ProtectionTest extends TestCase
         );
 
         $this->assertEquals(403, $this->response->getStatusCode());
+        $this->assertEquals(
+            '{"message":"Forbidden."}',
+            $this->response->getBody()->getContents()
+        );
     }
 
     /**
@@ -203,5 +211,9 @@ class ProtectionTest extends TestCase
         );
 
         $this->assertEquals(405, $this->response->getStatusCode());
+        $this->assertEquals(
+            '{"message":"Method not allowed."}',
+            $this->response->getBody()->getContents()
+        );
     }
 }
