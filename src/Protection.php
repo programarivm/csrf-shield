@@ -73,12 +73,11 @@ class Protection
     public function validateToken()
     {
         switch (true) {
-
             case $_SERVER['REQUEST_METHOD'] !== 'POST':
                 HttpResponse::methodNotAllowed();
                 break;
 
-            case !empty($_SERVER['HTTP_X_CSRF_TOKEN']):
+            case isset($_SERVER['HTTP_X_CSRF_TOKEN']):
                 if (!$this->csrfSession->validateToken($_SERVER['HTTP_X_CSRF_TOKEN'])) {
                     HttpResponse::forbidden();
                 }
