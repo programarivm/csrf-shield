@@ -8,8 +8,7 @@ use CsrfShield\HttpResponse;
 /**
  * Protection class.
  *
- * This is the main class which basically acts as a wrapper of CsrfShield\CsrfSession
- * and CsrfShield\Html.
+ * Acts as a wrapper of CsrfShield\CsrfSession and CsrfShield\Html.
  *
  * @author Jordi Bassagañas <info@programarivm.com>
  * @link https://programarivm.com
