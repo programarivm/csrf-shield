@@ -6,7 +6,9 @@
 
 ![CSRF Shield](/resources/csrf-shield.jpg?raw=true)
 
-This is a simple, framework-agnostic library that helps you protect your PHP web apps from CSRF attacks.
+This is a simple, framework-agnostic library that helps you protect your PHP web apps from CSRF attacks.  CSRF Shield is built on the idea of **sending tokens with the POST method only**; otherwise the server will respond with a `405` status code (`Method Not Allowed`).
+
+> **Remember**: It is encouraged not to disclose CSRF tokens in URLs. For further information on disclosing tokens in URLs, please visit OWASP's <a href="https://www.owasp.org/index.php/Cross-Site_Request_Forgery_(CSRF)_Prevention_Cheat_Sheet#Disclosure_of_Token_in_URL">Cross-Site Request Forgery CSRF Prevention Cheat Sheet</a>.
 
 ### 1. Install
 
@@ -39,10 +41,6 @@ session_start();
 // ...
 (new Protection)->validateToken();
 ```
-
- CSRF Shield is built on the idea of **sending tokens with the POST method only**; otherwise the server will respond with a `405` status code (`Method Not Allowed`).
-
-> **Side Note**: It is encouraged not to disclose CSRF tokens in URLs. For further information on disclosing tokens in URLs, please visit OWASP's <a href="https://www.owasp.org/index.php/Cross-Site_Request_Forgery_(CSRF)_Prevention_Cheat_Sheet#Disclosure_of_Token_in_URL">Cross-Site Request Forgery CSRF Prevention Cheat Sheet</a>.
 
 ### 3. `CsrfShield\Protection` Methods
 
