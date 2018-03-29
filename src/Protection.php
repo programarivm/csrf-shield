@@ -84,7 +84,7 @@ class Protection
                 }
                 break;
 
-            case $_SERVER['REQUEST_METHOD'] === 'POST':
+            default:
                 if (!$this->csrfSession->validateToken($_POST[$this->csrfSession::NAME])) {
                     $this->forbidden();
                 }
