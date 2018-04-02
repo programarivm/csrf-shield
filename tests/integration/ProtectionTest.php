@@ -25,6 +25,17 @@ class ProtectionTest extends TestCase
      */
     private $response;
 
+    private function scrapToken($html)
+    {
+      $dom = new \DOMDocument;
+      $dom->loadHTML($html);
+      $xp = new \DOMXpath($dom);
+      $nodes = $xp->query('//input[@name="_csrf_shield_token"]');
+      $node = $nodes->item(0);
+
+      return $node->getAttribute('value');
+    }
+
     public function setUp()
     {
         sleep(self::TIME_DELAY);
@@ -46,14 +57,7 @@ class ProtectionTest extends TestCase
     public function auto_processing_form_GET_200()
     {
         $this->response = $this->http->request('GET', 'auto-processing-form.php');
-
-        $dom = new \DOMDocument;
-        $dom->loadHTML($this->response->getBody()->getContents());
-
-        $xp = new \DOMXpath($dom);
-        $nodes = $xp->query('//input[@name="_csrf_shield_token"]');
-        $node = $nodes->item(0);
-        $token = $node->getAttribute('value');
+        $token = $this->scrapToken($this->response->getBody()->getContents());
 
         $this->assertEquals(200, $this->response->getStatusCode());
         $this->assertTrue(is_string($token));
@@ -66,18 +70,7 @@ class ProtectionTest extends TestCase
     public function auto_processing_form_POST_200()
     {
         $this->response = $this->http->request('GET', 'auto-processing-form.php');
-
-        $dom = new \DOMDocument;
-        $dom->loadHTML($this->response->getBody()->getContents());
-
-        $xp = new \DOMXpath($dom);
-        $nodes = $xp->query('//input[@name="_csrf_shield_token"]');
-        $node = $nodes->item(0);
-        $token = $node->getAttribute('value');
-
-        $this->assertEquals(200, $this->response->getStatusCode());
-        $this->assertTrue(is_string($token));
-        $this->assertEquals(40, strlen($token));
+        $token = $this->scrapToken($this->response->getBody()->getContents());
 
         $this->response = $this->http->request(
             'POST',
@@ -96,12 +89,10 @@ class ProtectionTest extends TestCase
      */
     public function auto_processing_form_POST_403()
     {
-        // HTTP/1.1 GET
+        // get the csrf token
         $this->response = $this->http->request('GET', 'auto-processing-form.php');
-        // do nothing with the response
 
-        // HTTP/1.1 POST
-        // send a foo token
+        // post a foo token
         $this->response = $this->http->request(
             'POST',
             'auto-processing-form.php', [
@@ -147,10 +138,6 @@ class ProtectionTest extends TestCase
             true
         );
 
-        $this->assertEquals(200, $this->response->getStatusCode());
-        $this->assertTrue(is_string($json['_csrf_shield_token']));
-        $this->assertEquals(40, strlen($json['_csrf_shield_token']));
-
         $this->response = $this->http->request(
             'POST',
             'ajax/post-token.php', [
@@ -168,12 +155,10 @@ class ProtectionTest extends TestCase
      */
     public function ajax_post_token_403()
     {
-        // HTTP/1.1 GET
+        // get the csrf token
         $this->response = $this->http->request('GET', 'ajax/get-token.php');
-        // do nothing with the response
 
-        // HTTP/1.1 POST
-        // send a foo token
+        // send a foo token though
         $this->response = $this->http->request(
             'POST',
             'ajax/post-token.php', [
@@ -195,12 +180,10 @@ class ProtectionTest extends TestCase
      */
     public function ajax_post_token_405()
     {
-        // HTTP/1.1 GET
+        // get the csrf token
         $this->response = $this->http->request('GET', 'ajax/get-token.php');
-        // do nothing with the response
 
-        // HTTP/1.1 GET
-        // send a foo token
+        // send a foo token though via GET
         $this->response = $this->http->request(
             'GET',
             'ajax/post-token.php', [
