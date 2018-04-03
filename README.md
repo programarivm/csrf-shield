@@ -86,22 +86,11 @@ Here is an example:
 
     <input type="hidden" name="_csrf_shield_token" id="_csrf_shield_token" value="5b18469018952acd17039f62f310426ceac16d3f" />
 
-### 4. Hello World
-
-Run the `auto-processing-form.php` example with PHP's built-in server to see `CsrfShield\Protection` in action:
-
-    cd examples
-    php -S localhost:8000
-
-And then visit:
-
-    http://localhost:8000/auto-processing-form.php
-
-### 5. License
+### 4. License
 
 The GNU General Public License.
 
-### 6. Contributions
+### 5. Contributions
 
 Would you help make this library better? Contributions are welcome.
 
